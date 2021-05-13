@@ -33,7 +33,10 @@ trait LoginUsers
             'password' => ['required', 'string']
         ]);
 
-        if ($this->guard()->attempt($request->all(), $request->input('remember', false))) {
+        if ($this->guard()->attempt(
+                $request->only(['email', 'password']),
+                $request->input('remember', false)
+            )) {
             $request->session()->regenerate();
             return $this->authenticated($request);
         }
