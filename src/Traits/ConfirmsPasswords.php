@@ -61,6 +61,6 @@ trait ConfirmsPasswords
             ]) :
             back()->withErrors([
                 'password' => ['The provided password does not match our records.']
-            ]);
+            ])->withInput($request->all());
     }
 }

@@ -61,6 +61,6 @@ trait LoginUsers
     {
         return $request->wantsJson() ?
             response()->json(['message' => trans('auth.failed')], 401) :
-            back()->withErrors(['email' => trans('auth.failed')]);
+            back()->withErrors(['email' => trans('auth.failed')])->withInput($request->all());
     }
 }

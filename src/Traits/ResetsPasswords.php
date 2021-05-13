@@ -103,6 +103,6 @@ trait ResetsPasswords
             ], $code) :
             back()->withErrors([
                 'email' => [trans($status)]
-            ]);
+            ])->withInput($request->all());
     }
 }
