@@ -16,7 +16,7 @@ trait ConfirmsPasswords
     {
         if (!static::$confirm) return;
 
-        $router->post('/confirm-password', [static::class, 'confirmPassword'])->name('confirm')
+        $router->post('/confirm-password', [static::class, 'confirmPassword'])->name('password.confirm')
             ->middleware([static::$auth_middleware, 'throttle:6,1']);
 
         if (!static::$confirm_password_view) return;
