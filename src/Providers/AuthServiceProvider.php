@@ -8,7 +8,7 @@ class AuthServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../../views', 'auth');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'auth');
         $this->publishes([
             __DIR__.'/../../resources/views' => resource_path('views/vendor/auth'),
         ], 'views');
