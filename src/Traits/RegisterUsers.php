@@ -2,6 +2,7 @@
 
 namespace WeStacks\Laravel\Auth\Traits;
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Hash;
@@ -43,6 +44,8 @@ trait RegisterUsers
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
+        
+        event(new Registered($user));
 
         $this->guard()->login($user);
 
