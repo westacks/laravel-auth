@@ -36,7 +36,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "WeStacks\\Laravel\\Auth\\Provicers\\AuthServiceProvider"
+                "WeStacks\\Laravel\\Auth\\Providers\\AuthServiceProvider"
             ]
         }
     },
