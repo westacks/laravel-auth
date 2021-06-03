@@ -3,6 +3,7 @@
 namespace WeStacks\Laravel\Auth\Traits;
 
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Hash;
@@ -10,22 +11,36 @@ use Illuminate\Validation\Rule;
 
 trait RegisterUsers
 {
-    protected static $register          = false;
-    protected static $model             = 'App\Models\User';
-    protected static $register_view     = 'auth::register';
     protected static $register_redirect = '/';
 
-    protected static function registerRoutes(Router $router)
+    /**
+     * Validate register credentials
+     * 
+     * @param Request $request 
+     * @return array 
+     */
+    protected function validateRegisterCredentials(Request $request)
     {
-        if (!static::$register) return;
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)],
+            'password' => ['required', 'string', 'max:255', 'confirmed']
+        ]);
+    }
 
-        $router->post('/register', [static::class, 'register'])->name('register')
-            ->middleware(['guest', 'throttle:6,1']);
-
-        if (!static::$register_view) return;
-
-        $router->view('/register', static::$register_view)
-            ->middleware('guest');
+    /**
+     * Register new user
+     * 
+     * @param Request $request 
+     * @return User 
+     */
+    protected function registerNewUser(Request $request)
+    {
+        return User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+        ]);
     }
 
     /**
@@ -33,17 +48,9 @@ trait RegisterUsers
      */
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(static::$model)],
-            'password' => ['required', 'string', 'max:255', 'confirmed']
-        ]);
+        $this->validateRegisterCredentials($request);
         
-        $user = static::$model::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-        ]);
+        $user = $this->registerNewUser($request);
         
         event(new Registered($user));
 

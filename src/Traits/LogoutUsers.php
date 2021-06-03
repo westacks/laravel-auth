@@ -7,17 +7,7 @@ use Illuminate\Routing\Router;
 
 trait LogoutUsers
 {
-    protected static $logout            = false;
     protected static $logout_redirect   = '/';
-    protected static $auth_middleware   = 'auth';
-
-    protected static function logoutRoutes(Router $router)
-    {
-        if (!static::$logout) return;
-
-        $router->post('/logout', [static::class, 'logout'])->name('logout')
-            ->middleware(static::$auth_middleware);
-    }
 
     /**
      * Logout request handler

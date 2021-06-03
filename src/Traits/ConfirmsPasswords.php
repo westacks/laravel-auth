@@ -8,23 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 trait ConfirmsPasswords
 {
-    protected static $confirm                 = false;
-    protected static $confirm_password_view   = 'auth::password.confirm';
-    protected static $auth_middleware         = 'auth';
-
-    protected static function passwordConfirmRoutes(Router $router)
-    {
-        if (!static::$confirm) return;
-
-        $router->post('/confirm-password', [static::class, 'confirmPassword'])->name('password.confirm')
-            ->middleware([static::$auth_middleware, 'throttle:6,1']);
-
-        if (!static::$confirm_password_view) return;
-    
-        $router->view('/confirm-password', static::$confirm_password_view)
-            ->middleware(static::$auth_middleware);
-    }
-
     /**
      * Password confirmation request handler
      */

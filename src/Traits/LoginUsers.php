@@ -3,38 +3,18 @@
 namespace WeStacks\Laravel\Auth\Traits;
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
 
 trait LoginUsers
 {
-    protected static $login      = false;
-    protected static $login_view = 'auth::login';
-
-    protected static function loginRoutes(Router $router)
-    {
-        if (!static::$login) return;
-
-        $router->post('/login', [static::class, 'login'])->name('login')
-            ->middleware(['guest', 'throttle:6,1']);
-        
-        if (!static::$login_view) return;
-            
-        $router->view('/login', static::$login_view)
-            ->middleware('guest');
-    }
-
     /**
      * Login request handler
      */
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string']
-        ]);
+        $this->validateLoginCredentials($request);
 
         if ($this->guard()->attempt(
-                $request->only(['email', 'password']),
+                $request->validated(),
                 $request->input('remember', false)
             )) {
             $request->session()->regenerate();
@@ -42,6 +22,20 @@ trait LoginUsers
         }
 
         return $this->authenticationFailed($request);
+    }
+
+    /**
+     * Validate login credentials
+     * 
+     * @param Request $request 
+     * @return array 
+     */
+    protected function validateLoginCredentials(Request $request)
+    {
+        return $request->validate([
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string']
+        ]);
     }
 
     /**

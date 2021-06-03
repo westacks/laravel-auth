@@ -2,7 +2,9 @@
 
 namespace WeStacks\Laravel\Auth\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use WeStacks\Laravel\Auth\AuthRoutesMethods;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -12,5 +14,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../resources/views' => resource_path('views/vendor/auth'),
         ], 'views');
+
+        Route::mixin(new AuthRoutesMethods);
     }
 }

@@ -11,29 +11,6 @@ use Illuminate\Support\Str;
 
 trait ResetsPasswords
 {
-    protected static $reset                 = false;
-    protected static $reset_password_view   = 'auth::password.reset';
-    protected static $forgot_password_view  = 'auth::password.forgot';
-
-    protected static function passwordResetRoutes(Router $router)
-    {
-        if (!static::$reset) return;
-
-        $router->post('/forgot-password', [static::class, 'forgotPassword'])->name('password.email')
-            ->middleware('guest');
-
-        $router->post('/reset-password', [static::class, 'resetPassword'])->name('password.update')
-            ->middleware(['guest']);
-
-        if (static::$forgot_password_view)
-            $router->view('/forgot-password', static::$forgot_password_view)->name('password.request')
-                ->middleware('guest');
-
-        if (static::$reset_password_view)
-            $router->get('/reset-password/{token}', [static::class, 'resetPasswordView'])->name('password.reset')
-                ->middleware('guest');
-    }
-
     /**
      * Send email to reset user's password
      */
@@ -47,14 +24,6 @@ trait ResetsPasswords
 
         $code = $status == Password::RESET_LINK_SENT ? 200 : 422;
         return $this->reportPasswordResetStatus($request, $code, $status);
-    }
-
-    /**
-     * Show form to reset user's password
-     */
-    public function resetPasswordView(string $token)
-    {
-        return view(static::$reset_password_view, compact('token'));
     }
 
     /**

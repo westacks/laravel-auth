@@ -4,30 +4,10 @@ namespace WeStacks\Laravel\Auth\Traits;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
 
 trait VerifiesEmail
 {
-    protected static $verify                = false;
-    protected static $verify_view           = 'auth::verify';
-    protected static $verify_redirect       = '/';
-    protected static $auth_middleware       = 'auth';
-
-    protected static function emailVerificationRoutes(Router $router)
-    {
-        if (!static::$verify) return;
-
-        $router->get('/email/verify/{id}/{hash}', [static::class, 'verifyEmail'])->name('verification.verify')
-            ->middleware(['signed', static::$auth_middleware]);
-
-        $router->post('/email/verification-notification', [static::class, 'sendEmailVerification'])->name('verification.send')
-            ->middleware([static::$auth_middleware, 'throttle:1,1']);
-
-        if (!static::$verify_view) return;
-
-        $router->view('/email/verify', static::$verify_view)->name('verification.notice')
-            ->middleware([static::$auth_middleware]);
-    }
+    protected static $verify_redirect = '/';
 
     /**
      * Handle email verification request
