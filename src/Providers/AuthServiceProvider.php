@@ -18,6 +18,5 @@ class AuthServiceProvider extends ServiceProvider
         ], 'views');
 
         Route::mixin(new RouteAuthMethods);
-        Auth::mixin(new AuthRoutesMethods);
     }
 }
