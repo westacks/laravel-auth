@@ -33,7 +33,7 @@ class RouteAuthMethods
                 'verify_view'           => $options['verify_view']              ?? 'auth::verify',
             ];
 
-            if (class_exists($options['controller']) && is_subclass_of($options['controller'], AuthController::class)) {
+            if (!class_exists($options['controller']) || !is_subclass_of($options['controller'], AuthController::class)) {
                 throw new RuntimeException("The given 'controller' is not instance of WeStacks\Laravel\Auth\Controllers\AuthController");
             }
 
