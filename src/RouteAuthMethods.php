@@ -82,7 +82,7 @@ class RouteAuthMethods
                 $this->post('/forgot-password', [$options['controller'], 'forgotPassword'])->name('password.email')
                     ->middleware('guest');
 
-                $this->post('/reset-password', [$options['controller'], 'resetPassword'])->name('password.update')
+                $this->post('/reset-password', [$options['controller'], 'resetPassword'])->name('password.reset')
                     ->middleware(['guest']);
 
                 if ($options['forgot_password_view'] && $options['views'])
